@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- namespace 一定要對應到你的 UserMapper 介面完整包名 -->
+<mapper namespace="com.bookingsystem.bookingboot.mapper.UserMapper">
+
+    <!--
+        resultMap：定義「資料表欄位」怎麼對應到「User 物件的屬性」
+        如果你有開 map-underscore-to-camel-case，其實可以不用這麼細寫，
+        但我這裡示範完整寫法，讓你看得清楚。
+    -->
+    <resultMap id="UserResultMap" type="Users">
+        <id     property="id"        column="id"/>
+        <result property="userName"  column="username"/>
+        <result property="email"     column="email"/>
+        <result property="passwordHash"  column="password_hash"/>
+        <result property="createdAt" column="created_at"/>
+        <result property="updatedAt" column="updated_at"/>
+    </resultMap>
+
+    <!-- 共用欄位清單：之後 SELECT 時可以 <include> 進來 -->
+    <sql id="Base_Column_List">
+        id,
+        username,
+        email,
+        password,
+        created_at,
+        updated_at
+    </sql>
+
+
+    <!-- 查全部 -->
+    <select id="findAllUsers" resultMap="UserResultMap">
+        SELECT
+            *
+        FROM users
+        ORDER BY id DESC
+    </select>
+
+<!--    &lt;!&ndash;-->
+<!--        動態條件查詢：-->
+<!--        參數用 User 物件（或你可以改成 Map、DTO 都可以）-->
+<!--        只有帶到值的欄位才會加到 WHERE 裡-->
+<!--    &ndash;&gt;-->
+<!--    <select id="selectByCondition" parameterType="User" resultMap="UserResultMap">-->
+<!--        SELECT-->
+<!--        <include refid="Base_Column_List"/>-->
+<!--        FROM user-->
+<!--        <where>-->
+<!--            <if test="username != null and username != ''">-->
+<!--                AND username LIKE CONCAT('%', #{username}, '%')-->
+<!--            </if>-->
+<!--            <if test="email != null and email != ''">-->
+<!--                AND email = #{email}-->
+<!--            </if>-->
+<!--        </where>-->
+<!--        ORDER BY id DESC-->
+<!--    </select>-->
+
+<!--    &lt;!&ndash; 新增：使用自動遞增主鍵，回填到 user.id &ndash;&gt;-->
+<!--    <insert id="insert" parameterType="User"-->
+<!--            useGeneratedKeys="true" keyProperty="id">-->
+<!--        INSERT INTO user-->
+<!--        (-->
+<!--            username,-->
+<!--            email,-->
+<!--            password,-->
+<!--            created_at,-->
+<!--            updated_at-->
+<!--        )-->
+<!--        VALUES-->
+<!--            (-->
+<!--                #{username},-->
+<!--                #{email},-->
+<!--                #{password},-->
+<!--                NOW(),-->
+<!--                NOW()-->
+<!--            )-->
+<!--    </insert>-->
+
+<!--    &lt;!&ndash; 更新：只有有值的欄位才改（動態 SET） &ndash;&gt;-->
+<!--    <update id="update" parameterType="User">-->
+<!--        UPDATE user-->
+<!--        <set>-->
+<!--            <if test="username != null and username != ''">-->
+<!--                username = #{username},-->
+<!--            </if>-->
+<!--            <if test="email != null and email != ''">-->
+<!--                email = #{email},-->
+<!--            </if>-->
+<!--            <if test="password != null and password != ''">-->
+<!--                password = #{password},-->
+<!--            </if>-->
+<!--            &lt;!&ndash; 一定會更新 updated_at &ndash;&gt;-->
+<!--            updated_at = NOW()-->
+<!--        </set>-->
+<!--        WHERE id = #{id}-->
+<!--    </update>-->
+
+<!--    &lt;!&ndash; 刪除單筆 &ndash;&gt;-->
+<!--    <delete id="deleteById" parameterType="long">-->
+<!--        DELETE FROM user-->
+<!--        WHERE id = #{id}-->
+<!--    </delete>-->
+
+<!--    &lt;!&ndash; 批次刪除：傳入 List<Long> ids &ndash;&gt;-->
+<!--    <delete id="deleteBatchByIds">-->
+<!--        DELETE FROM user-->
+<!--        WHERE id IN-->
+<!--        <foreach collection="ids" item="id"-->
+<!--                 open="(" close=")" separator=",">-->
+<!--            #{id}-->
+<!--        </foreach>-->
+<!--    </delete>-->
+
+</mapper>
