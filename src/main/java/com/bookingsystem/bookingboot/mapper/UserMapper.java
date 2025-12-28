@@ -11,7 +11,11 @@ import java.util.List;
 public interface UserMapper {
 
     @Select("select * from users where id = #{id} ")
-    public Users findById(String id);
+    Users findById(String id);
+
+    @Select("select * from users where username = #{username} ")
+    Users findByUserName(String userName);
+
 
     List<Users> findAllUsers();
 }

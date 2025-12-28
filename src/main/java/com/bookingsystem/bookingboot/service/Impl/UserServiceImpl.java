@@ -15,7 +15,11 @@ public class UserServiceImpl implements UserService {
     private UserMapper userMapper;
     @Override
     public List<Users> getAllUser() {
-        System.out.println("18."+userMapper.findAllUsers().size());
         return userMapper.findAllUsers();
+    }
+
+    @Override
+    public Users getUserByUsername(String userName) {
+        return userMapper.findByUserName(userName);
     }
 }
